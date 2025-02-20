@@ -1,6 +1,6 @@
 ﻿use std::ops;
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, PartialEq)]
 pub struct Vector2D {
     pub x: f32,
     pub y: f32,
@@ -17,12 +17,6 @@ impl ops::Sub<Vector2D> for Vector2D{
     type Output = Vector2D;
     fn sub (self, other: Vector2D) -> Vector2D{
         Vector2D::new(self.x - other.x, self.y - other.y)
-    }
-}
-
-impl PartialEq for Vector2D{
-    fn eq(&self, other: &Self) -> bool {
-        self.x == other.x && self.y == other.y
     }
 }
 
@@ -76,5 +70,4 @@ mod tests{
         let vec = Vector2D::new(3.0, 4.0);
         assert_eq!(vec.length(), 5.0);
     }
-
 }
