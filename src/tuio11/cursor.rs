@@ -1,30 +1,5 @@
 use std::time::Duration;
 use crate::common::vector_2d::Vector2D;
-// #[derive(Default, Debug, Clone)]
-// pub struct Position {
-//     pub x: f32,
-//     pub y: f32,
-// }
-
-// impl Position {
-//     pub fn distance_from(&self, position: &Position) -> f32 {
-//         let dx = self.x - position.x;
-//         let dy = self.y - position.y;
-//         (dx * dx + dy * dy).sqrt()
-//     }
-// }
-
-// #[derive(Default, PartialEq, Clone, Copy, Debug)]
-// pub struct Velocity {
-//     pub x: f32,
-//     pub y: f32,
-// }
-//
-// impl Velocity {
-//     pub fn get_speed(&self) -> f32 {
-//         (self.x * self.x + self.y * self.y).sqrt()
-//     }
-// }
 
 #[derive(Debug, Clone, Default)]
 pub struct Cursor {
