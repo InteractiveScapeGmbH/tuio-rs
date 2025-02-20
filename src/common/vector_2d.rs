@@ -28,7 +28,7 @@ impl Vector2D{
         }
     }
 
-    fn length(self) -> f32{
+    pub fn length(self) -> f32{
         ((self.x * self.x) + (self.y * self.y)).sqrt()
     }
 }
