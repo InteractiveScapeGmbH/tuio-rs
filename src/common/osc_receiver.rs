@@ -7,7 +7,7 @@ use std::{
 
 use rosc::{OscPacket};
 
-use crate::errors::OscReceiverError;
+use crate::common::errors::OscReceiverError;
 
 /// Base trait to implement receiving OSC over various transport methods
 pub trait OscReceiver<P, E: Error> {

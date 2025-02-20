@@ -1,6 +1,5 @@
 use std::{f32::consts::PI, time::Duration};
-
-use crate::cursor::{Position, Velocity};
+use crate::tuio11::cursor::{Position, Velocity};
 
 #[derive(Debug, Clone, Default)]
 pub struct Object {
@@ -153,8 +152,8 @@ impl PartialEq for Object {
 #[cfg(test)]
 mod tests {
     use std::{f32::consts::SQRT_2, time::Duration};
-
-    use crate::{cursor::Position, object::Object};
+    use crate::tuio11::cursor::Position;
+    use crate::tuio11::Object;
 
     #[test]
     fn object_update() {

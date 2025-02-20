@@ -1,6 +1,5 @@
 use std::{f32::consts::PI, time::Duration};
-
-use crate::cursor::{Position, Velocity};
+use crate::tuio11::cursor::{Position, Velocity};
 
 #[derive(Debug, Clone, Default)]
 pub struct Blob {
@@ -204,8 +203,8 @@ impl PartialEq for Blob {
 #[cfg(test)]
 mod tests {
     use std::{f32::consts::SQRT_2, time::Duration};
-
-    use crate::{blob::Blob, cursor::Position};
+    use crate::tuio11::Blob;
+    use crate::tuio11::cursor::Position;
 
     #[test]
     fn blob_update() {

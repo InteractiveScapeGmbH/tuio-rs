@@ -1,8 +1,9 @@
 use std::{time::{SystemTime}, iter};
 
 use rosc::{OscBundle, OscPacket, OscMessage, OscType, OscTime};
-
-use crate::{object::Object, cursor::{Cursor, Position, Velocity}, blob::Blob, errors::TuioError};
+use crate::common::errors::TuioError;
+use crate::tuio11::{Blob, Cursor, Object};
+use crate::tuio11::cursor::{Position, Velocity};
 
 /// Base trait to implement an OSC encoder
 pub trait EncodeOsc<T> {
@@ -375,7 +376,6 @@ impl DecodeOsc<OscBundle> for OscDecoder {
 
 #[cfg(test)]
 mod tests {
-    use crate::{cursor::{Cursor, Position}, object::Object, blob::Blob, osc_encode_decode::{OscEncoder, EncodeOsc}};
 
     use super::*;
 

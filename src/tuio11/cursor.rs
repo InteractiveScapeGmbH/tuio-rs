@@ -126,8 +126,8 @@ impl PartialEq for Cursor {
 #[cfg(test)]
 mod tests {
     use std::{f32::consts::SQRT_2, time::Duration};
-
-    use crate::cursor::{Cursor, Position};
+    use crate::tuio11::Cursor;
+    use crate::tuio11::cursor::Position;
 
     #[test]
     fn cursor_update() {

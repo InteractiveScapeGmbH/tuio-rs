@@ -1,7 +1,10 @@
 use std::{net::{SocketAddr, IpAddr, Ipv4Addr}};
 
 use rosc::OscPacket;
-use tuio_rs::{Cursor, cursor::Position, osc_encode_decode::{OscEncoder, EncodeOsc}, server::{UdpSender, SendOsc}};
+use tuio_rs::tuio11::osc_encode_decode::{EncodeOsc, OscEncoder};
+use tuio_rs::tuio11::server::{SendOsc, UdpSender};
+use tuio_rs::tuio11::Cursor;
+use tuio_rs::tuio11::cursor::Position;
 
 fn main() {
     let source = "test".to_string();

@@ -3,8 +3,11 @@ use std::{time::{Instant, Duration}, sync::{RwLock, Arc, Mutex}, collections::Ha
 use indexmap::IndexMap;
 use ringbuffer::{ConstGenericRingBuffer, RingBufferWrite, RingBufferRead};
 use rosc::{OscPacket};
-
-use crate::{osc_receiver::{UdpReceiver, RoscReceiver}, cursor::{Cursor}, object::Object, blob::Blob, errors::{TuioError, OscReceiverError}, osc_encode_decode::{OscDecoder, DecodeOsc, self, Set}};
+use crate::common::osc_receiver::{RoscReceiver, UdpReceiver};
+use crate::common::errors::{OscReceiverError, TuioError};
+use crate::tuio11::osc_encode_decode;
+use crate::tuio11::osc_encode_decode::{DecodeOsc, OscDecoder, Set};
+use crate::tuio11::{Blob, Cursor, Object};
 
 #[derive(Default)]
 pub struct TuioEvents {

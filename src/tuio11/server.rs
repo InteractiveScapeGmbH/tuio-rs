@@ -4,8 +4,9 @@ use rosc::encoder;
 use rosc::OscType;
 use local_ip_address::local_ip;
 use indexmap::{IndexMap};
-
-use crate::{cursor::{Position}, osc_encode_decode::{EncodeOsc, OscEncoder}, Object, Cursor, Blob}; 
+use crate::tuio11::osc_encode_decode::{EncodeOsc, OscEncoder};
+use crate::tuio11::{Blob, Cursor, Object};
+use crate::tuio11::cursor::Position;
 
 /// Base trait to implement sending OSC over various transport methods
 pub trait SendOsc<P, E> where E: Error {
