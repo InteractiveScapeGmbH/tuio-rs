@@ -2,8 +2,8 @@ use std::{time::{SystemTime}, iter};
 
 use rosc::{OscBundle, OscPacket, OscMessage, OscType, OscTime};
 use crate::common::errors::TuioError;
+use crate::common::vector_2d::Vector2D;
 use crate::tuio11::{Blob, Cursor, Object};
-use crate::tuio11::cursor::{Position, Velocity};
 
 /// Base trait to implement an OSC encoder
 pub trait EncodeOsc<T> {
@@ -250,9 +250,9 @@ fn try_unwrap_object_args(args: &[OscType]) -> Result<Object, u8> {
     Ok(Object {
         session_id: args[1].clone().int().ok_or(1)?,
         class_id: args[2].clone().int().ok_or(2)?,
-        position: Position {x: args[3].clone().float().ok_or(3)?, y: args[4].clone().float().ok_or(4)?},
+        position: Vector2D {x: args[3].clone().float().ok_or(3)?, y: args[4].clone().float().ok_or(4)?},
         angle: args[5].clone().float().ok_or(5)?,
-        velocity: Velocity {x: args[6].clone().float().ok_or(6)?, y: args[7].clone().float().ok_or(7)?},
+        velocity: Vector2D {x: args[6].clone().float().ok_or(6)?, y: args[7].clone().float().ok_or(7)?},
         rotation_speed: args[8].clone().float().ok_or(8)?,
         acceleration: args[9].clone().float().ok_or(9)?,
         rotation_acceleration: args[10].clone().float().ok_or(10)?,
@@ -262,8 +262,8 @@ fn try_unwrap_object_args(args: &[OscType]) -> Result<Object, u8> {
 fn try_unwrap_cursor_args(args: &[OscType]) -> Result<Cursor, u8> {
     Ok(Cursor {
         session_id: args[1].clone().int().ok_or(1)?,
-        position: Position {x: args[2].clone().float().ok_or(2)?, y: args[3].clone().float().ok_or(3)?},
-        velocity: Velocity {x: args[4].clone().float().ok_or(4)?, y: args[5].clone().float().ok_or(5)?},
+        position: Vector2D {x: args[2].clone().float().ok_or(2)?, y: args[3].clone().float().ok_or(3)?},
+        velocity: Vector2D {x: args[4].clone().float().ok_or(4)?, y: args[5].clone().float().ok_or(5)?},
         acceleration: args[6].clone().float().ok_or(6)?,
     })
 }
@@ -271,12 +271,12 @@ fn try_unwrap_cursor_args(args: &[OscType]) -> Result<Cursor, u8> {
 fn try_unwrap_blob_args(args: &[OscType]) -> Result<Blob, u8> {
     Ok(Blob {
         session_id: args[1].clone().int().ok_or(1)?,
-        position: Position {x: args[2].clone().float().ok_or(2)?, y: args[3].clone().float().ok_or(3)?},
+        position: Vector2D {x: args[2].clone().float().ok_or(2)?, y: args[3].clone().float().ok_or(3)?},
         angle: args[4].clone().float().ok_or(4)?,
         width: args[5].clone().float().ok_or(5)?,
         height: args[6].clone().float().ok_or(6)?,
         area: args[7].clone().float().ok_or(7)?,
-        velocity: Velocity {x: args[8].clone().float().ok_or(8)?, y: args[9].clone().float().ok_or(9)?},
+        velocity: Vector2D {x: args[8].clone().float().ok_or(8)?, y: args[9].clone().float().ok_or(9)?},
         rotation_speed: args[10].clone().float().ok_or(10)?,
         acceleration: args[11].clone().float().ok_or(11)?,
         rotation_acceleration: args[12].clone().float().ok_or(12)?,
@@ -383,9 +383,9 @@ mod tests {
     fn encoding_decoding() {
         let source = "test".to_string();
 
-        let cursors = vec![Cursor::new(0, Position {x: 0., y: 0.}), Cursor::new(1, Position {x: 0.5, y: 0.5})];
-        let objects = vec![Object::new(0, 0, Position {x: 0., y: 0.}, 0.), Object::new(1, 1, Position {x: 0.5, y: 0.5}, 0.)];
-        let blobs = vec![Blob::new(0, Position {x: 0., y: 0.}, 0., 0.3, 0.3, 0.09), Blob::new(1, Position {x: 0.5, y: 0.5}, 0., 0.5, 0.5, 0.25)];
+        let cursors = vec![Cursor::new(0, Vector2D {x: 0., y: 0.}), Cursor::new(1, Vector2D {x: 0.5, y: 0.5})];
+        let objects = vec![Object::new(0, 0, Vector2D {x: 0., y: 0.}, 0.), Object::new(1, 1, Vector2D {x: 0.5, y: 0.5}, 0.)];
+        let blobs = vec![Blob::new(0, Vector2D {x: 0., y: 0.}, 0., 0.3, 0.3, 0.09), Blob::new(1, Vector2D {x: 0.5, y: 0.5}, 0., 0.5, 0.5, 0.25)];
 
         let cursor_bundle = OscEncoder::encode_cursor_bundle(&cursors, source.clone(), 0);
         let object_bundle = OscEncoder::encode_object_bundle(&objects, source.clone(), 0);

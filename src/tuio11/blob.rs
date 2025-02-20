@@ -1,11 +1,11 @@
 use std::{f32::consts::PI, time::Duration};
-use crate::tuio11::cursor::{Position, Velocity};
+use crate::common::vector_2d::Vector2D;
 
 #[derive(Debug, Clone, Default)]
 pub struct Blob {
     pub(crate) session_id: i32,
-    pub(crate) position: Position,
-    pub(crate) velocity: Velocity,
+    pub(crate) position: Vector2D,
+    pub(crate) velocity: Vector2D,
     pub(crate) acceleration: f32,
     pub(crate) angle: f32,
     pub(crate) rotation_speed: f32,
@@ -26,7 +26,7 @@ impl Blob {
     /// * `area` - a normalized area
     pub fn new(
         session_id: i32,
-        position: Position,
+        position: Vector2D,
         angle: f32,
         width: f32,
         height: f32,
@@ -35,7 +35,7 @@ impl Blob {
         Self {
             session_id,
             position,
-            velocity: Velocity::default(),
+            velocity: Vector2D::default(),
             acceleration: 0f32,
             angle,
             rotation_speed: 0f32,
@@ -54,7 +54,7 @@ impl Blob {
     /// * `rotation_acceleration` - a roation acceleration in radians turn per second squared
     pub fn with_motion(
         mut self,
-        velocity: Velocity,
+        velocity: Vector2D,
         rotation_speed: f32,
         acceleration: f32,
         rotation_acceleration: f32,
@@ -77,7 +77,7 @@ impl Blob {
     pub fn update(
         &mut self,
         delta_time: Duration,
-        position: Position,
+        position: Vector2D,
         angle: f32,
         width: f32,
         height: f32,
@@ -85,14 +85,14 @@ impl Blob {
     ) {
         let delta_time = delta_time.as_secs_f32();
 
-        let distance = position.distance_from(&self.position);
+        let distance = (position - self.position).length();
         let delta_x = position.x - self.position.x;
         let delta_y = position.y - self.position.y;
 
-        let last_speed = self.velocity.get_speed();
+        let last_speed = self.velocity.length();
         let speed = distance / delta_time;
 
-        self.velocity = Velocity {
+        self.velocity = Vector2D {
             x: delta_x / delta_time,
             y: delta_y / delta_time,
         };
@@ -115,7 +115,7 @@ impl Blob {
         self.session_id
     }
 
-    pub fn get_position(&self) -> &Position {
+    pub fn get_position(&self) -> &Vector2D {
         &self.position
     }
 
@@ -127,7 +127,7 @@ impl Blob {
         self.position.y
     }
 
-    pub fn get_velocity(&self) -> &Velocity {
+    pub fn get_velocity(&self) -> &Vector2D {
         &self.velocity
     }
 
@@ -203,16 +203,16 @@ impl PartialEq for Blob {
 #[cfg(test)]
 mod tests {
     use std::{f32::consts::SQRT_2, time::Duration};
+    use crate::common::vector_2d::Vector2D;
     use crate::tuio11::Blob;
-    use crate::tuio11::cursor::Position;
 
     #[test]
     fn blob_update() {
-        let mut blob = Blob::new(0, Position { x: 0., y: 0. }, 0., 0., 0., 0.);
+        let mut blob = Blob::new(0, Vector2D { x: 0., y: 0. }, 0., 0., 0., 0.);
 
         blob.update(
             Duration::from_secs(1),
-            Position { x: 1., y: 1. },
+            Vector2D { x: 1., y: 1. },
             90f32.to_radians(),
             0.5,
             0.5,

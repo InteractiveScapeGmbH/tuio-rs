@@ -1,36 +1,36 @@
 use std::time::Duration;
+use crate::common::vector_2d::Vector2D;
+// #[derive(Default, Debug, Clone)]
+// pub struct Position {
+//     pub x: f32,
+//     pub y: f32,
+// }
 
-#[derive(Default, Debug, Clone)]
-pub struct Position {
-    pub x: f32,
-    pub y: f32,
-}
+// impl Position {
+//     pub fn distance_from(&self, position: &Position) -> f32 {
+//         let dx = self.x - position.x;
+//         let dy = self.y - position.y;
+//         (dx * dx + dy * dy).sqrt()
+//     }
+// }
 
-impl Position {
-    pub fn distance_from(&self, position: &Position) -> f32 {
-        let dx = self.x - position.x;
-        let dy = self.y - position.y;
-        (dx * dx + dy * dy).sqrt()
-    }
-}
-
-#[derive(Default, PartialEq, Clone, Copy, Debug)]
-pub struct Velocity {
-    pub x: f32,
-    pub y: f32,
-}
-
-impl Velocity {
-    pub fn get_speed(&self) -> f32 {
-        (self.x * self.x + self.y * self.y).sqrt()
-    }
-}
+// #[derive(Default, PartialEq, Clone, Copy, Debug)]
+// pub struct Velocity {
+//     pub x: f32,
+//     pub y: f32,
+// }
+//
+// impl Velocity {
+//     pub fn get_speed(&self) -> f32 {
+//         (self.x * self.x + self.y * self.y).sqrt()
+//     }
+// }
 
 #[derive(Debug, Clone, Default)]
 pub struct Cursor {
     pub(crate) session_id: i32,
-    pub(crate) position: Position,
-    pub(crate) velocity: Velocity,
+    pub(crate) position: Vector2D,
+    pub(crate) velocity: Vector2D,
     pub(crate) acceleration: f32,
 }
 
@@ -39,11 +39,11 @@ impl Cursor {
     /// # Arguments
     /// * `session_id` - a unique session ID
     /// * `position` - a normalized [Position]
-    pub fn new(session_id: i32, position: Position) -> Self {
+    pub fn new(session_id: i32, position: Vector2D) -> Self {
         Self {
             session_id,
             position,
-            velocity: Velocity::default(),
+            velocity: Vector2D::default(),
             acceleration: 0f32,
         }
     }
@@ -52,7 +52,7 @@ impl Cursor {
     /// # Arguments
     /// * `velocity` - a normalized [Velocity]
     /// * `acceleration` - a normalized acceleration
-    pub fn with_motion(mut self, velocity: Velocity, acceleration: f32) -> Self {
+    pub fn with_motion(mut self, velocity: Vector2D, acceleration: f32) -> Self {
         self.velocity = velocity;
         self.acceleration = acceleration;
         self
@@ -62,7 +62,7 @@ impl Cursor {
         self.session_id
     }
 
-    pub fn get_position(&self) -> &Position {
+    pub fn get_position(&self) -> &Vector2D {
         &self.position
     }
 
@@ -74,7 +74,7 @@ impl Cursor {
         self.position.y
     }
 
-    pub fn get_velocity(&self) -> &Velocity {
+    pub fn get_velocity(&self) -> &Vector2D {
         &self.velocity
     }
 
@@ -94,16 +94,16 @@ impl Cursor {
     /// # Arguments
     /// * `delta_time` - the [Duration] since last update
     /// * `position` - the new [Position]
-    pub fn update(&mut self, delta_time: Duration, position: Position) {
+    pub fn update(&mut self, delta_time: Duration, position: Vector2D) {
         let delta_time = delta_time.as_secs_f32();
-        let distance = position.distance_from(&self.position);
+        let distance = (position - self.position).length();
         let delta_x = position.x - self.position.x;
         let delta_y = position.y - self.position.y;
 
-        let last_speed = self.velocity.get_speed();
+        let last_speed = self.velocity.length();
         let speed = distance / delta_time;
 
-        self.velocity = Velocity {
+        self.velocity = Vector2D {
             x: delta_x / delta_time,
             y: delta_y / delta_time,
         };
@@ -127,13 +127,13 @@ impl PartialEq for Cursor {
 mod tests {
     use std::{f32::consts::SQRT_2, time::Duration};
     use crate::tuio11::Cursor;
-    use crate::tuio11::cursor::Position;
+    use crate::tuio11::cursor::Vector2D;
 
     #[test]
     fn cursor_update() {
-        let mut cursor = Cursor::new(0, Position { x: 0., y: 0. });
+        let mut cursor = Cursor::new(0, Vector2D { x: 0., y: 0. });
 
-        cursor.update(Duration::from_secs(1), Position { x: 1., y: 1. });
+        cursor.update(Duration::from_secs(1), Vector2D { x: 1., y: 1. });
 
         assert_eq!(cursor.get_x_position(), 1.);
         assert_eq!(cursor.get_y_position(), 1.);
