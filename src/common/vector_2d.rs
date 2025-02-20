@@ -1,6 +1,6 @@
 ﻿use std::ops;
 
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Copy)]
 pub struct Vector2D {
     pub x: f32,
     pub y: f32,
