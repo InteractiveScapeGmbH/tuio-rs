@@ -6,7 +6,7 @@ use local_ip_address::local_ip;
 use indexmap::{IndexMap};
 use crate::common::vector_2d::Vector2D;
 use crate::tuio11::osc_encode_decode::{EncodeOsc, OscEncoder};
-use crate::tuio11::{Blob, Cursor, Object};
+use crate::tuio11::{Tuio11Blob, Tuio11Cursor, Tuio11Object};
 
 /// Base trait to implement sending OSC over various transport methods
 pub trait SendOsc<P, E> where E: Error {
@@ -68,20 +68,20 @@ pub struct Server {
     sender_list: Vec<Box<dyn SendOsc<OscPacket, OscError>>>,
     source_name: String,
     session_id: i32,
-    object_map: IndexMap<i32, Object>,
+    object_map: IndexMap<i32, Tuio11Object>,
     object_updated: bool,
     frame_cursor_ids: Vec<i32>,
     frame_object_ids: Vec<i32>,
     frame_blob_ids: Vec<i32>,
-    cursor_map: IndexMap<i32, Cursor>,
+    cursor_map: IndexMap<i32, Tuio11Cursor>,
     cursor_updated: bool,
-    blob_map: IndexMap<i32, Blob>,
+    blob_map: IndexMap<i32, Tuio11Blob>,
     blob_updated: bool,
     instant: Instant,
     last_frame_instant: Instant,
     frame_duration: Duration,
     last_frame_id: AtomicI32,
-    /// Enables the full update of all currently active and inactive [Object]s, [Cursor]s and [Blob]s
+    /// Enables the full update of all currently active and inactive [Tuio11Object]s, [Tuio11Cursor]s and [Tuio11Blob]s
     pub full_update: bool,
     periodic_messaging: bool,
     update_interval: Duration,
@@ -169,7 +169,7 @@ impl Server {
         self.source_name = format!("{}@{}", name, source);
     }
 
-    /// Enables the periodic full update of all currently active TUIO [Object]s, [Cursor]s and [Blob]s
+    /// Enables the periodic full update of all currently active TUIO [Tuio11Object]s, [Tuio11Cursor]s and [Tuio11Blob]s
     ///
     /// # Arguments
     /// * `interval` - an option of a duration. Notes that the minimum interval will always be 10 milliseconds
@@ -181,7 +181,7 @@ impl Server {
         }
     }
 
-    /// Disable the periodic full update of all currently active TUIO [Object]s, [Cursor]s and [Blob]s
+    /// Disable the periodic full update of all currently active TUIO [Tuio11Object]s, [Tuio11Cursor]s and [Tuio11Blob]s
     pub fn disable_periodic_message(&mut self) {
         self.periodic_messaging = false;
     }
@@ -191,7 +191,7 @@ impl Server {
         self.session_id
     }
 
-    /// Creates a TUIO [Object] and returns its session_id
+    /// Creates a TUIO [Tuio11Object] and returns its session_id
     ///
     /// # Arguments
     /// * `class_id` - a unique identifier that can be associated with a tangible object
@@ -201,14 +201,14 @@ impl Server {
     pub fn create_object(&mut self, class_id: i32, x: f32, y: f32, angle: f32) -> i32 {
         let session_id = self.get_session_id();
         
-        let object = Object::new(session_id, class_id, Vector2D{x, y}, angle);
+        let object = Tuio11Object::new(session_id, class_id, Vector2D{x, y}, angle);
         self.object_map.insert(session_id, object);
         self.frame_object_ids.push(session_id);
         self.object_updated = true;
         session_id
     }
 
-    /// Updates a TUIO [Object]
+    /// Updates a TUIO [Tuio11Object]
     ///
     /// # Arguments
     /// * `session_id` - the object's session id
@@ -224,7 +224,7 @@ impl Server {
         }
     }
 
-    /// Removes a TUIO [Object]
+    /// Removes a TUIO [Tuio11Object]
     ///
     /// # Arguments
     /// * `session_id` - the object's session id
@@ -234,7 +234,7 @@ impl Server {
         }
     }
 
-    /// Creates a TUIO [Cursor] and returns its session_id
+    /// Creates a TUIO [Tuio11Cursor] and returns its session_id
     ///
     /// # Arguments
     /// * `x` - the cursor's x position
@@ -242,14 +242,14 @@ impl Server {
     pub fn create_cursor(&mut self, x: f32, y: f32) -> i32 {
         let session_id = self.get_session_id();
         
-        let cursor = Cursor::new(session_id, Vector2D{x, y});
+        let cursor = Tuio11Cursor::new(session_id, Vector2D{x, y});
         self.cursor_map.insert(session_id, cursor);
         self.frame_cursor_ids.push(session_id);
         self.cursor_updated = true;
         session_id
     }
 
-    /// Updates a TUIO [Cursor]
+    /// Updates a TUIO [Tuio11Cursor]
     ///
     /// # Arguments
     /// * `session_id` - the cursor's session id
@@ -263,7 +263,7 @@ impl Server {
         }
     }
 
-    /// Removes a TUIO [Cursor]
+    /// Removes a TUIO [Tuio11Cursor]
     ///
     /// # Arguments
     /// * `session_id` - the cursor's session id
@@ -273,7 +273,7 @@ impl Server {
         }
     }
 
-    /// Creates a TUIO [Blob] and returns its session_id
+    /// Creates a TUIO [Tuio11Blob] and returns its session_id
     ///
     /// # Arguments
     /// * `x` - the blob's x position
@@ -285,7 +285,7 @@ impl Server {
     pub fn create_blob(&mut self, x: f32, y: f32, angle: f32, width: f32, height: f32, area: f32) -> i32 {
         let session_id = self.get_session_id();
         
-        let blob = Blob::new(session_id, Vector2D{x, y}, angle, width, height, area);
+        let blob = Tuio11Blob::new(session_id, Vector2D{x, y}, angle, width, height, area);
         self.blob_map.insert(session_id, blob);
         self.frame_blob_ids.push(session_id);
         self.blob_updated = true;
@@ -293,7 +293,7 @@ impl Server {
     }
 
     #[allow(clippy::too_many_arguments)]
-    /// Updates a TUIO [Blob]
+    /// Updates a TUIO [Tuio11Blob]
     ///
     /// # Arguments
     /// * `session_id` - the blob's session id
@@ -312,7 +312,7 @@ impl Server {
         }
     }
 
-    /// Removes a TUIO [Blob]
+    /// Removes a TUIO [Tuio11Blob]
     ///
     /// # Arguments
     /// * `session_id` - the blob's session id
@@ -331,7 +331,7 @@ impl Server {
 
     /// Commits the current frame.
     /// 
-    /// Generates and sends TUIO messages of all currently active and updated [Object]s, [Cursor]s and [Blob]s
+    /// Generates and sends TUIO messages of all currently active and updated [Tuio11Object]s, [Tuio11Cursor]s and [Tuio11Blob]s
     pub fn commit_frame(&mut self) {
         if self.object_updated || (self.periodic_messaging && self.object_profiling && self.object_update_time.duration_since(self.last_frame_instant) >= self.update_interval) {
             if self.full_update {

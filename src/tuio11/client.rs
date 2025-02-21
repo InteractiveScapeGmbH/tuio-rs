@@ -7,7 +7,7 @@ use crate::common::osc_receiver::{RoscReceiver, UdpReceiver};
 use crate::common::errors::{OscReceiverError, TuioError};
 use crate::tuio11::osc_encode_decode;
 use crate::tuio11::osc_encode_decode::{DecodeOsc, OscDecoder, Set};
-use crate::tuio11::{Blob, Cursor, Object};
+use crate::tuio11::{Tuio11Blob, Tuio11Cursor, Tuio11Object};
 
 #[derive(Default)]
 pub struct TuioEvents {
@@ -18,17 +18,17 @@ pub struct TuioEvents {
 
 pub struct CursorData {
     pub source_name: String,
-    pub cursor: Cursor
+    pub cursor: Tuio11Cursor
 }
 
 pub struct ObjectData {
     pub source_name: String,
-    pub object: Object
+    pub object: Tuio11Object
 }
 
 pub struct BlobData {
     pub source_name: String,
-    pub blob: Blob
+    pub blob: Tuio11Blob
 }
 
 pub enum CursorEvent {
@@ -51,9 +51,9 @@ pub enum BlobEvent {
 
 #[derive(Default)]
 pub struct SourceCollection {
-    pub object_map: IndexMap<i32, Object>,
-    pub blob_map: IndexMap<i32, Blob>,
-    pub cursor_map: IndexMap<i32, Cursor>
+    pub object_map: IndexMap<i32, Tuio11Object>,
+    pub blob_map: IndexMap<i32, Tuio11Blob>,
+    pub cursor_map: IndexMap<i32, Tuio11Cursor>
 }
 
 pub struct Client {

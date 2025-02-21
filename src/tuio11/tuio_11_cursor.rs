@@ -2,15 +2,15 @@ use std::time::Duration;
 use crate::common::vector_2d::Vector2D;
 
 #[derive(Debug, Clone, Default)]
-pub struct Cursor {
+pub struct Tuio11Cursor {
     pub(crate) session_id: i32,
     pub(crate) position: Vector2D,
     pub(crate) velocity: Vector2D,
     pub(crate) acceleration: f32,
 }
 
-impl Cursor {
-    /// Creates a new [Cursor]
+impl Tuio11Cursor {
+    /// Creates a new [Tuio11Cursor]
     /// # Arguments
     /// * `session_id` - a unique session ID
     /// * `position` - a normalized [Position]
@@ -23,7 +23,7 @@ impl Cursor {
         }
     }
 
-    /// Returns this [Cursor] with motion
+    /// Returns this [Tuio11Cursor] with motion
     /// # Arguments
     /// * `velocity` - a normalized [Velocity]
     /// * `acceleration` - a normalized acceleration
@@ -65,7 +65,7 @@ impl Cursor {
         self.acceleration
     }
 
-    /// Updates the [Cursor], computing its velocity and acceleration
+    /// Updates the [Tuio11Cursor], computing its velocity and acceleration
     /// # Arguments
     /// * `delta_time` - the [Duration] since last update
     /// * `position` - the new [Position]
@@ -88,7 +88,7 @@ impl Cursor {
     }
 }
 
-impl PartialEq for Cursor {
+impl PartialEq for Tuio11Cursor {
     fn eq(&self, other: &Self) -> bool {
         self.session_id == other.session_id
             && self.get_x_position() == other.get_x_position()
@@ -101,12 +101,12 @@ impl PartialEq for Cursor {
 #[cfg(test)]
 mod tests {
     use std::{f32::consts::SQRT_2, time::Duration};
-    use crate::tuio11::Cursor;
-    use crate::tuio11::cursor::Vector2D;
+    use crate::tuio11::Tuio11Cursor;
+    use crate::tuio11::tuio_11_cursor::Vector2D;
 
     #[test]
     fn cursor_update() {
-        let mut cursor = Cursor::new(0, Vector2D { x: 0., y: 0. });
+        let mut cursor = Tuio11Cursor::new(0, Vector2D { x: 0., y: 0. });
 
         cursor.update(Duration::from_secs(1), Vector2D { x: 1., y: 1. });
 

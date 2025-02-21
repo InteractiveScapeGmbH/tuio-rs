@@ -3,37 +3,37 @@ use std::{time::{SystemTime}, iter};
 use rosc::{OscBundle, OscPacket, OscMessage, OscType, OscTime};
 use crate::common::errors::TuioError;
 use crate::common::vector_2d::Vector2D;
-use crate::tuio11::{Blob, Cursor, Object};
+use crate::tuio11::{Tuio11Blob, Tuio11Cursor, Tuio11Object};
 
 /// Base trait to implement an OSC encoder
 pub trait EncodeOsc<T> {
-    /// Encodes an [Object] collection into an OSC bundle
+    /// Encodes an [Tuio11Object] collection into an OSC bundle
     /// # Arguments
-    /// * `object_collection` - an iterable [Object] collection
+    /// * `object_collection` - an iterable [Tuio11Object] collection
     /// * `source_name` - the source's name
     /// * `frame_id` - the current's frame id
-    fn encode_object_bundle<'a, I>(object_collection: I, source_name: String, frame_id: i32) -> T where I: IntoIterator<Item = &'a Object>;
+    fn encode_object_bundle<'a, I>(object_collection: I, source_name: String, frame_id: i32) -> T where I: IntoIterator<Item = &'a Tuio11Object>;
 
-    /// Encodes an [Cursor] collection into an OSC bundle
+    /// Encodes an [Tuio11Cursor] collection into an OSC bundle
     /// # Arguments
-    /// * `cursor_collection` - an iterable [Cursor] collection
+    /// * `cursor_collection` - an iterable [Tuio11Cursor] collection
     /// * `source_name` - the source's name
     /// * `frame_id` - the current's frame id
-    fn encode_cursor_bundle<'a, I>(cursor_collection: I, source_name: String, frame_id: i32) -> T where I: IntoIterator<Item = &'a Cursor>;
+    fn encode_cursor_bundle<'a, I>(cursor_collection: I, source_name: String, frame_id: i32) -> T where I: IntoIterator<Item = &'a Tuio11Cursor>;
 
-    /// Encodes an [Blob] collection into an OSC bundle
+    /// Encodes an [Tuio11Blob] collection into an OSC bundle
     /// # Arguments
-    /// * `blob_collection` - an iterable [Blob] collection
+    /// * `blob_collection` - an iterable [Tuio11Blob] collection
     /// * `source_name` - the source's name
     /// * `frame_id` - the current's frame id
-    fn encode_blob_bundle<'a, I>(blob_collection: I, source_name: String, frame_id: i32) -> T where I: IntoIterator<Item = &'a Blob>;
+    fn encode_blob_bundle<'a, I>(blob_collection: I, source_name: String, frame_id: i32) -> T where I: IntoIterator<Item = &'a Tuio11Blob>;
 }
 
 /// An implementation of trait [EncodeOsc] based on [rosc]
 pub struct OscEncoder;
 
 impl EncodeOsc<OscBundle> for OscEncoder {
-    fn encode_object_bundle<'a, I>(object_collection: I, source_name: String, frame_id: i32) -> OscBundle where I: IntoIterator<Item = &'a Object> {
+    fn encode_object_bundle<'a, I>(object_collection: I, source_name: String, frame_id: i32) -> OscBundle where I: IntoIterator<Item = &'a Tuio11Object> {
         let source_message = OscPacket::Message(OscMessage {
             addr: "/tuio/2Dobj".into(),
             args: vec![
@@ -89,7 +89,7 @@ impl EncodeOsc<OscBundle> for OscEncoder {
         }
     }
 
-    fn encode_cursor_bundle<'a, I>(cursor_collection: I, source_name: String, frame_id: i32) -> OscBundle where I: IntoIterator<Item = &'a Cursor> {
+    fn encode_cursor_bundle<'a, I>(cursor_collection: I, source_name: String, frame_id: i32) -> OscBundle where I: IntoIterator<Item = &'a Tuio11Cursor> {
         let source_message = OscPacket::Message(OscMessage {
             addr: "/tuio/2Dcur".into(),
             args: vec![
@@ -141,7 +141,7 @@ impl EncodeOsc<OscBundle> for OscEncoder {
         }
     }
 
-    fn encode_blob_bundle<'a, I>(blob_collection: I, source_name: String, frame_id: i32) -> OscBundle where I: IntoIterator<Item = &'a Blob> {
+    fn encode_blob_bundle<'a, I>(blob_collection: I, source_name: String, frame_id: i32) -> OscBundle where I: IntoIterator<Item = &'a Tuio11Blob> {
         let source_message = OscPacket::Message(OscMessage {
             addr: "/tuio/2Dblb".into(),
             args: vec![
@@ -202,9 +202,9 @@ impl EncodeOsc<OscBundle> for OscEncoder {
 
 /// An enum of a "set" TUIO message
 pub enum Set {
-    Cursor(Vec<Cursor>),
-    Object(Vec<Object>),
-    Blob(Vec<Blob>),
+    Cursor(Vec<Tuio11Cursor>),
+    Object(Vec<Tuio11Object>),
+    Blob(Vec<Tuio11Blob>),
 }
 
 #[derive(Default)]
@@ -246,8 +246,8 @@ fn try_unwrap_source_name(message: &OscMessage) -> Result<String, TuioError> {
     }
 }
 
-fn try_unwrap_object_args(args: &[OscType]) -> Result<Object, u8> {
-    Ok(Object {
+fn try_unwrap_object_args(args: &[OscType]) -> Result<Tuio11Object, u8> {
+    Ok(Tuio11Object {
         session_id: args[1].clone().int().ok_or(1)?,
         class_id: args[2].clone().int().ok_or(2)?,
         position: Vector2D {x: args[3].clone().float().ok_or(3)?, y: args[4].clone().float().ok_or(4)?},
@@ -259,8 +259,8 @@ fn try_unwrap_object_args(args: &[OscType]) -> Result<Object, u8> {
     })
 }
 
-fn try_unwrap_cursor_args(args: &[OscType]) -> Result<Cursor, u8> {
-    Ok(Cursor {
+fn try_unwrap_cursor_args(args: &[OscType]) -> Result<Tuio11Cursor, u8> {
+    Ok(Tuio11Cursor {
         session_id: args[1].clone().int().ok_or(1)?,
         position: Vector2D {x: args[2].clone().float().ok_or(2)?, y: args[3].clone().float().ok_or(3)?},
         velocity: Vector2D {x: args[4].clone().float().ok_or(4)?, y: args[5].clone().float().ok_or(5)?},
@@ -268,8 +268,8 @@ fn try_unwrap_cursor_args(args: &[OscType]) -> Result<Cursor, u8> {
     })
 }
 
-fn try_unwrap_blob_args(args: &[OscType]) -> Result<Blob, u8> {
-    Ok(Blob {
+fn try_unwrap_blob_args(args: &[OscType]) -> Result<Tuio11Blob, u8> {
+    Ok(Tuio11Blob {
         session_id: args[1].clone().int().ok_or(1)?,
         position: Vector2D {x: args[2].clone().float().ok_or(2)?, y: args[3].clone().float().ok_or(3)?},
         angle: args[4].clone().float().ok_or(4)?,
@@ -383,9 +383,9 @@ mod tests {
     fn encoding_decoding() {
         let source = "test".to_string();
 
-        let cursors = vec![Cursor::new(0, Vector2D {x: 0., y: 0.}), Cursor::new(1, Vector2D {x: 0.5, y: 0.5})];
-        let objects = vec![Object::new(0, 0, Vector2D {x: 0., y: 0.}, 0.), Object::new(1, 1, Vector2D {x: 0.5, y: 0.5}, 0.)];
-        let blobs = vec![Blob::new(0, Vector2D {x: 0., y: 0.}, 0., 0.3, 0.3, 0.09), Blob::new(1, Vector2D {x: 0.5, y: 0.5}, 0., 0.5, 0.5, 0.25)];
+        let cursors = vec![Tuio11Cursor::new(0, Vector2D {x: 0., y: 0.}), Tuio11Cursor::new(1, Vector2D {x: 0.5, y: 0.5})];
+        let objects = vec![Tuio11Object::new(0, 0, Vector2D {x: 0., y: 0.}, 0.), Tuio11Object::new(1, 1, Vector2D {x: 0.5, y: 0.5}, 0.)];
+        let blobs = vec![Tuio11Blob::new(0, Vector2D {x: 0., y: 0.}, 0., 0.3, 0.3, 0.09), Tuio11Blob::new(1, Vector2D {x: 0.5, y: 0.5}, 0., 0.5, 0.5, 0.25)];
 
         let cursor_bundle = OscEncoder::encode_cursor_bundle(&cursors, source.clone(), 0);
         let object_bundle = OscEncoder::encode_object_bundle(&objects, source.clone(), 0);

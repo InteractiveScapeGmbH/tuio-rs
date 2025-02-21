@@ -2,7 +2,7 @@ use std::{f32::consts::PI, time::Duration};
 use crate::common::vector_2d::Vector2D;
 
 #[derive(Debug, Clone, Default)]
-pub struct Blob {
+pub struct Tuio11Blob {
     pub(crate) session_id: i32,
     pub(crate) position: Vector2D,
     pub(crate) velocity: Vector2D,
@@ -15,8 +15,8 @@ pub struct Blob {
     pub(crate) area: f32,
 }
 
-impl Blob {
-    /// Creates a new [Blob]
+impl Tuio11Blob {
+    /// Creates a new [Tuio11Blob]
     /// # Arguments
     /// * `session_id` - a unique session ID
     /// * `position` - a normalized [Position]
@@ -46,7 +46,7 @@ impl Blob {
         }
     }
 
-    /// Returns this [Blob] with motion
+    /// Returns this [Tuio11Blob] with motion
     /// # Arguments
     /// * `velocity` - a normalized [Velocity]
     /// * `rotation_speed` - a rotation speed in turns per second
@@ -66,7 +66,7 @@ impl Blob {
         self
     }
 
-    /// Updates the [Blob], computing its velocity, acceleration, rotation speed and rotation acceleration
+    /// Updates the [Tuio11Blob], computing its velocity, acceleration, rotation speed and rotation acceleration
     /// # Arguments
     /// * `delta_time` - the [Duration] since last update
     /// * `position` - the new [Position]
@@ -184,7 +184,7 @@ impl Blob {
     }
 }
 
-impl PartialEq for Blob {
+impl PartialEq for Tuio11Blob {
     fn eq(&self, other: &Self) -> bool {
         self.session_id == other.session_id
             && self.get_x_position() == other.get_x_position()
@@ -204,11 +204,11 @@ impl PartialEq for Blob {
 mod tests {
     use std::{f32::consts::SQRT_2, time::Duration};
     use crate::common::vector_2d::Vector2D;
-    use crate::tuio11::Blob;
+    use crate::tuio11::Tuio11Blob;
 
     #[test]
     fn blob_update() {
-        let mut blob = Blob::new(0, Vector2D { x: 0., y: 0. }, 0., 0., 0., 0.);
+        let mut blob = Tuio11Blob::new(0, Vector2D { x: 0., y: 0. }, 0., 0., 0., 0.);
 
         blob.update(
             Duration::from_secs(1),

@@ -2,7 +2,7 @@ use std::{f32::consts::PI, time::Duration};
 use crate::common::vector_2d::Vector2D;
 
 #[derive(Debug, Clone, Default)]
-pub struct Object {
+pub struct Tuio11Object {
     pub(crate) session_id: i32,
     pub(crate) class_id: i32,
     pub(crate) position: Vector2D,
@@ -13,8 +13,8 @@ pub struct Object {
     pub(crate) rotation_acceleration: f32,
 }
 
-impl Object {
-    /// Creates a new [Object]
+impl Tuio11Object {
+    /// Creates a new [Tuio11Object]
     /// # Arguments
     /// * `session_id` - a unique session ID
     /// * `class_id` - the object's class ID
@@ -33,7 +33,7 @@ impl Object {
         }
     }
 
-    /// Returns this [Object] with motion
+    /// Returns this [Tuio11Object] with motion
     /// # Arguments
     /// * `velocity` - a normalized [Velocity]
     /// * `rotation_speed` - a rotation speed in turns per second
@@ -104,7 +104,7 @@ impl Object {
         self.rotation_acceleration
     }
 
-    /// Updates the [Object], computing its velocity, acceleration, rotation speed and rotation acceleration
+    /// Updates the [Tuio11Object], computing its velocity, acceleration, rotation speed and rotation acceleration
     /// # Arguments
     /// * `delta_time` - the [Duration] since last update
     /// * `position` - the new [Position]
@@ -135,7 +135,7 @@ impl Object {
     }
 }
 
-impl PartialEq for Object {
+impl PartialEq for Tuio11Object {
     fn eq(&self, other: &Self) -> bool {
         self.session_id == other.session_id
             && self.class_id == other.class_id
@@ -153,11 +153,11 @@ impl PartialEq for Object {
 mod tests {
     use std::{f32::consts::SQRT_2, time::Duration};
     use crate::common::vector_2d::Vector2D;
-    use crate::tuio11::Object;
+    use crate::tuio11::Tuio11Object;
 
     #[test]
     fn object_update() {
-        let mut object = Object::new(0, 0, Vector2D { x: 0., y: 0. }, 0.);
+        let mut object = Tuio11Object::new(0, 0, Vector2D { x: 0., y: 0. }, 0.);
 
         object.update(
             Duration::from_secs(1),

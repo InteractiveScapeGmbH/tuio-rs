@@ -1,11 +1,11 @@
-﻿pub mod blob;
-pub mod cursor;
+﻿pub mod tuio_11_blob;
+pub mod tuio_11_cursor;
 pub mod client;
-pub mod object;
+pub mod tuio_11_object;
 pub mod server;
 pub mod osc_encode_decode;
 
-pub use cursor::Cursor;
-pub use object::Object;
-pub use blob::Blob;
+pub use tuio_11_cursor::Tuio11Cursor;
+pub use tuio_11_object::Tuio11Object;
+pub use tuio_11_blob::Tuio11Blob;
 pub use client::Client;
