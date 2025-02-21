@@ -4,6 +4,7 @@ use crate::common::vector_2d::Vector2D;
 use crate::tuio20::tuio_20_object::Tuio20Object;
 use crate::tuio20::tuio_20_point::Tuio20Point;
 
+#[derive(Copy)]
 pub struct Tuio20Component{
     tuio_point: Tuio20Point,
     current_time: TuioTime,
@@ -34,6 +35,10 @@ impl Tuio20Component{
         }
     }
 
+    pub fn get_state(&self) -> TuioState{
+        self.state
+    }
+
     pub fn has_changed(&self, position: Vector2D, angle:f32, velocity: Vector2D, acceleration: f32, rotation_speed: f32, rotation_acceleration: f32) -> bool{
         self.tuio_point.has_changed(position) || !(self.angle == angle && self.velocity == velocity && self.acceleration == acceleration && self.rotation_speed == rotation_speed && self.rotation_acceleration == rotation_acceleration)
     }
@@ -59,5 +64,10 @@ impl Tuio20Component{
             self.state = TuioState::Stopped;
         }
         self.container.update(current_time);
+    }
+
+    pub fn remove(&mut self, current_time: TuioTime){
+        self.current_time = current_time;
+        self.state = TuioState::Removed;
     }
 }

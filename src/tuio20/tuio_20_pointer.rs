@@ -3,8 +3,8 @@ use crate::common::tuio_time::TuioTime;
 use crate::common::vector_2d::Vector2D;
 use crate::tuio20::tuio_20_component::Tuio20Component;
 use crate::tuio20::tuio_20_object::Tuio20Object;
-use crate::tuio20::tuio_20_point::Tuio20Point;
 
+#[derive(Copy)]
 pub struct Tuio20Pointer{
     component: Tuio20Component,
     type_user_id: u32,
@@ -30,6 +30,10 @@ impl Tuio20Pointer{
         }
     }
 
+    pub fn get_state(&self) -> TuioState{
+        self.component.get_state()
+    }
+
     pub fn has_changed(&self, type_user_id: u32, component_id: u32, position: Vector2D, angle: f32, shear: f32, radius: f32, pressure: f32, velocity: Vector2D, pressure_speed: f32, acceleration: f32, pressure_acceleration: f32) -> bool{
         self.component.has_changed(position, angle, velocity, acceleration, 0.0, 0.0) ||
         !(self.type_user_id == type_user_id &&
@@ -50,5 +54,9 @@ impl Tuio20Pointer{
         self.pressure = pressure;
         self.pressure_speed = pressure_speed;
         self.pressure_acceleration = pressure_acceleration;
+    }
+
+    pub fn remove(&mut self, current_time: TuioTime){
+        self.component.remove(current_time);
     }
 }

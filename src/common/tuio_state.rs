@@ -1,3 +1,4 @@
+#[derive(Copy)]
 pub enum TuioState{
     Added,
     Accelerating,
