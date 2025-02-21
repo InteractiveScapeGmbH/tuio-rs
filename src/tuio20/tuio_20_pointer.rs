@@ -7,8 +7,8 @@ use crate::tuio20::tuio_20_object::Tuio20Object;
 #[derive(Copy)]
 pub struct Tuio20Pointer{
     component: Tuio20Component,
-    type_user_id: u32,
-    component_id: u32,
+    type_user_id: i32,
+    component_id: i32,
     shear: f32,
     radius: f32,
     pressure: f32,
@@ -17,7 +17,7 @@ pub struct Tuio20Pointer{
 }
 
 impl Tuio20Pointer{
-    fn new(start_time: TuioTime, container: Tuio20Object, type_user_id: u32, component_id: u32, position: Vector2D, angle: f32, shear: f32, radius: f32, pressure: f32, velocity: Vector2D, pressure_speed: f32, acceleration: f32, pressure_acceleration: f32) -> Self{
+    fn new(start_time: TuioTime, container: Tuio20Object, type_user_id: i32, component_id: i32, position: Vector2D, angle: f32, shear: f32, radius: f32, pressure: f32, velocity: Vector2D, pressure_speed: f32, acceleration: f32, pressure_acceleration: f32) -> Self{
         Tuio20Pointer{
             component: Tuio20Component::new(start_time, container, position, angle, velocity, 0.0, acceleration, 0.0),
             type_user_id,
@@ -34,7 +34,7 @@ impl Tuio20Pointer{
         self.component.get_state()
     }
 
-    pub fn has_changed(&self, type_user_id: u32, component_id: u32, position: Vector2D, angle: f32, shear: f32, radius: f32, pressure: f32, velocity: Vector2D, pressure_speed: f32, acceleration: f32, pressure_acceleration: f32) -> bool{
+    pub fn has_changed(&self, type_user_id: i32, component_id: i32, position: Vector2D, angle: f32, shear: f32, radius: f32, pressure: f32, velocity: Vector2D, pressure_speed: f32, acceleration: f32, pressure_acceleration: f32) -> bool{
         self.component.has_changed(position, angle, velocity, acceleration, 0.0, 0.0) ||
         !(self.type_user_id == type_user_id &&
             self.component_id == component_id &&
@@ -45,7 +45,7 @@ impl Tuio20Pointer{
             self.pressure_acceleration == pressure_acceleration)
     }
 
-    pub fn update(&mut self, current_time: TuioTime, type_user_id: u32, component_id: u32, position: Vector2D, angle:f32, shear: f32, radius: f32, pressure: f32, velocity: Vector2D, pressure_speed: f32, acceleration: f32, pressure_acceleration: f32){
+    pub fn update(&mut self, current_time: TuioTime, type_user_id: i32, component_id: i32, position: Vector2D, angle:f32, shear: f32, radius: f32, pressure: f32, velocity: Vector2D, pressure_speed: f32, acceleration: f32, pressure_acceleration: f32){
         self.component.update(current_time, position, angle, velocity, 0.0, acceleration, 0.0);
         self.type_user_id = type_user_id;
         self.component_id = component_id;

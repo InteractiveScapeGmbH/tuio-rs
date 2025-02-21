@@ -9,7 +9,7 @@ use crate::tuio20::tuio_20_token::Tuio20Token;
 pub struct Tuio20Object{
     start_time: TuioTime,
     current_time: TuioTime,
-    session_id: u32,
+    session_id: i32,
     token: Option<Tuio20Token>,
     pointer: Option<Tuio20Pointer>,
     bounds: Option<Tuio20Bounds>,
@@ -19,7 +19,7 @@ pub struct Tuio20Object{
 }
 
 impl Tuio20Object {
-    pub fn new(start_time: TuioTime, session_id: u32) -> Self{
+    pub fn new(start_time: TuioTime, session_id: i32) -> Self{
         Self{
             start_time,
             current_time: start_time,
