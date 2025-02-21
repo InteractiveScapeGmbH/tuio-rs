@@ -21,7 +21,7 @@ impl ops::Sub<Vector2D> for Vector2D{
 }
 
 impl Vector2D{
-    fn new(x: f32, y: f32)->Vector2D{
+    pub fn new(x: f32, y: f32)->Vector2D{
         Vector2D{
             x,
             y
